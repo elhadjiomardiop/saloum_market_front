@@ -1,4 +1,5 @@
 'use client'
+export const dynamic = "force-dynamic";
 import { apiRequest } from '@/lib/api';
 import { setSession } from '@/lib/auth';
 import Link from 'next/link';
