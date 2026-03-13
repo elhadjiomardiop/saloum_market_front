@@ -1,7 +1,7 @@
 'use client'
 import { HomeIcon, LayoutListIcon, Phone, Search, ShoppingCart, StoreIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { clearSession, getSessionUser, setSession } from "@/lib/auth";
@@ -13,12 +13,14 @@ const Navbar = () => {
     const desktopProfileRef = useRef(null);
     const mobileProfileRef = useRef(null);
 
+    const pathname = usePathname();
     const [search, setSearch] = useState('')
     const [user, setUser] = useState(null)
     const [showProfile, setShowProfile] = useState(false)
     const [showMobileSearch, setShowMobileSearch] = useState(false)
     const [savingProfile, setSavingProfile] = useState(false)
     const [profileForm, setProfileForm] = useState({ name: '', email: '' })
+    const [currentHash, setCurrentHash] = useState('')
     const cartCount = useSelector(state => state.cart.total)
 
     useEffect(() => {
@@ -31,6 +33,16 @@ const Navbar = () => {
             })
         }
     }, [])
+
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return
+        }
+        const updateHash = () => setCurrentHash(window.location.hash || '')
+        updateHash()
+        window.addEventListener('hashchange', updateHash)
+        return () => window.removeEventListener('hashchange', updateHash)
+    }, [pathname])
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
@@ -53,6 +65,25 @@ const Navbar = () => {
         setShowMobileSearch(false)
         router.push(`/shop?search=${encodeURIComponent(search)}`)
     }
+
+    const isActiveLink = (href) => {
+        if (href.startsWith('/#')) {
+            const hash = href.replace('/', '')
+            if (href === '/#accueil') {
+                return pathname === '/' && (currentHash === '' || currentHash === '#accueil')
+            }
+            return pathname === '/' && currentHash === hash
+        }
+
+        if (href === '/') {
+            return pathname === '/'
+        }
+
+        return pathname === href || pathname.startsWith(`${href}/`)
+    }
+
+    const linkClass = (href) =>
+        `transition ${isActiveLink(href) ? 'text-orange-600 font-semibold' : 'text-slate-600 hover:text-orange-500'}`
 
     const handleLogout = async () => {
         try {
@@ -101,10 +132,10 @@ const Navbar = () => {
                         </Link>
 
                         <div className="hidden md:flex items-center gap-4 lg:gap-8 text-slate-600">
-                            <Link href="/#accueil" className="hover:text-orange-500">Accueil</Link>
-                            <Link href="/shop" className="hover:text-orange-500">Boutique</Link>
-                            <Link href="/#apropos" className="hover:text-orange-500">A propos</Link>
-                            <Link href="/#contact" className="hover:text-orange-500">Contact</Link>
+                            <Link href="/#accueil" className={linkClass('/#accueil')}>Accueil</Link>
+                            <Link href="/shop" className={linkClass('/shop')}>Boutique</Link>
+                            <Link href="/#apropos" className={linkClass('/#apropos')}>A propos</Link>
+                            <Link href="/#contact" className={linkClass('/#contact')}>Contact</Link>
 
                             <form onSubmit={handleSearch} className="hidden xl:flex items-center w-xs text-sm gap-2 bg-slate-100 px-4 py-3 rounded-full">
                                 <Search size={18} className="text-slate-600" />
@@ -278,18 +309,18 @@ const Navbar = () => {
             </nav>
             <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur">
                 <div className="mx-auto grid grid-cols-5 text-[10px] text-slate-600">
-                    {[
-                        { href: '/', label: 'Accueil', Icon: HomeIcon },
-                        { href: '/shop', label: 'Boutique', Icon: StoreIcon },
-                        { href: '/#apropos', label: 'A propos', Icon: UserIcon },
-                        { href: '/#contact', label: 'Contact', Icon: Phone },
-                        { href: '/orders', label: 'Mes commandes', Icon: LayoutListIcon },
-                    ].map((item) => (
-                        <Link
-                            key={item.label}
-                            href={item.href}
-                            className="flex flex-col items-center justify-center gap-1 py-2 hover:text-orange-500"
-                        >
+                        {[
+                            { href: '/', label: 'Accueil', Icon: HomeIcon },
+                            { href: '/shop', label: 'Boutique', Icon: StoreIcon },
+                            { href: '/#apropos', label: 'A propos', Icon: UserIcon },
+                            { href: '/#contact', label: 'Contact', Icon: Phone },
+                            { href: '/orders', label: 'Mes commandes', Icon: LayoutListIcon },
+                        ].map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className={`flex flex-col items-center justify-center gap-1 py-2 transition ${isActiveLink(item.href) ? 'text-orange-600 font-semibold' : 'text-slate-600 hover:text-orange-500'}`}
+                            >
                             <item.Icon size={18} />
                             <span className="leading-none">{item.label}</span>
                         </Link>

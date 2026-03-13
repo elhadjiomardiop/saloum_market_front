@@ -17,6 +17,13 @@ const AdminSidebar = () => {
         { name: 'Coupons', href: '/admin/coupons', icon: TicketPercentIcon  },
     ]
 
+    const isActiveLink = (href) => {
+        if (href === '/admin') {
+            return pathname === '/admin'
+        }
+        return pathname === href || pathname.startsWith(`${href}/`)
+    }
+
     return (
         <div className="inline-flex h-full flex-col gap-5 border-r border-orange-200 sm:min-w-60">
             <div className="flex flex-col gap-3 justify-center items-center pt-8 max-sm:hidden">
@@ -27,10 +34,10 @@ const AdminSidebar = () => {
             <div className="max-sm:mt-6">
                 {
                     sidebarLinks.map((link, index) => (
-                        <Link key={index} href={link.href} className={`relative flex items-center gap-3 text-slate-500 hover:bg-orange-50 p-2.5 transition ${pathname === link.href && 'bg-orange-100 sm:text-slate-600'}`}>
+                        <Link key={index} href={link.href} className={`relative flex items-center gap-3 text-slate-500 hover:bg-orange-50 p-2.5 transition ${isActiveLink(link.href) && 'bg-orange-100 sm:text-slate-600'}`}>
                             <link.icon size={18} className="sm:ml-5" />
                             <p className="max-sm:hidden">{link.name}</p>
-                            {pathname === link.href && <span className="absolute bg-orange-500 right-0 top-1.5 bottom-1.5 w-1 sm:w-1.5 rounded-l"></span>}
+                            {isActiveLink(link.href) && <span className="absolute bg-orange-500 right-0 top-1.5 bottom-1.5 w-1 sm:w-1.5 rounded-l"></span>}
                         </Link>
                     ))
                 }
