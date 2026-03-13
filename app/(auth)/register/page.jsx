@@ -100,6 +100,9 @@ export default function RegisterPage() {
             <p className="text-sm text-slate-600 mt-4">
                 Deja un compte ? <Link href="/login" className="text-orange-600">Connexion</Link>
             </p>
+            <p className="text-xs text-slate-500 mt-3">
+                <Link href="/" className="text-orange-600">Voir le site sans se connecter</Link>
+            </p>
         </div>
     );
 }

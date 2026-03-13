@@ -98,6 +98,9 @@ export default function LoginClient({ nextPath }) {
             <p className="text-sm text-slate-600 mt-4">
                 Pas encore de compte ? <Link href="/register" className="text-orange-600">Inscription</Link>
             </p>
+            <p className="text-xs text-slate-500 mt-3">
+                <Link href="/" className="text-orange-600">Voir le site sans se connecter</Link>
+            </p>
         </div>
     );
 }
