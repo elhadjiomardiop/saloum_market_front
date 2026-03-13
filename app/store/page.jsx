@@ -5,6 +5,7 @@ import { CircleDollarSignIcon, ShoppingBasketIcon, StarIcon, TagsIcon } from "lu
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 
 export default function Dashboard() {
 
@@ -36,6 +37,11 @@ export default function Dashboard() {
                 totalOrders: data.totalOrders || 0,
                 ratings: data.ratings || [],
             })
+        } catch (error) {
+            toast.error(error.message || "Impossible de charger le dashboard.")
+            if (error.message?.includes('droits') || error.message?.includes('auth')) {
+                router.push('/login')
+            }
         } finally {
             setLoading(false)
         }

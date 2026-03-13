@@ -4,12 +4,16 @@ import AddressModal from './AddressModal';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { apiRequest } from '@/lib/api';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '@/lib/features/cart/cartSlice';
 
 const OrderSummary = ({ totalPrice, items }) => {
 
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || 'FCFA ';
 
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const addressList = useSelector(state => state.address.list);
 
@@ -27,6 +31,25 @@ const OrderSummary = ({ totalPrice, items }) => {
     const handlePlaceOrder = async (e) => {
         e.preventDefault();
 
+        if (!selectedAddress) {
+            throw new Error("Veuillez choisir une adresse.")
+        }
+
+        const payload = {
+            items: items.map((item) => ({
+                product_id: Number(item.id),
+                quantity: item.quantity,
+            })),
+            address: selectedAddress,
+            payment_method: paymentMethod,
+        }
+
+        await apiRequest('/orders', {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        })
+
+        dispatch(clearCart())
         router.push('/orders')
     }
 

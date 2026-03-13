@@ -38,14 +38,10 @@ export default function LoginPage() {
             }
 
             if (data.user.role === 'vendor') {
-                if (nextPath && nextPath.startsWith('/create-store')) {
-                    router.push(nextPath);
-                    return;
-                }
                 try {
                     const storeData = await apiRequest('/vendor/store');
                     const store = storeData?.data;
-                    if (!store || store.status !== 'approved') {
+                    if (!store) {
                         router.push('/create-store');
                         return;
                     }
@@ -54,6 +50,10 @@ export default function LoginPage() {
                     return;
                 }
 
+                if (nextPath && nextPath.startsWith('/store')) {
+                    router.push(nextPath);
+                    return;
+                }
                 router.push('/store');
                 return;
             }

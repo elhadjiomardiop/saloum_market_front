@@ -4,6 +4,7 @@ import ProductDetails from "@/components/ProductDetails";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { apiRequest } from "@/lib/api";
 
 export default function Product() {
 
@@ -12,14 +13,21 @@ export default function Product() {
     const products = useSelector(state => state.product.list);
 
     const fetchProduct = async () => {
-        const product = products.find((product) => product.id === productId);
-        setProduct(product);
+        const localProduct = products.find((item) => String(item.id) === String(productId));
+        if (localProduct) {
+            setProduct(localProduct);
+            return;
+        }
+        try {
+            const data = await apiRequest(`/products/${productId}`)
+            setProduct(data?.data || null)
+        } catch {
+            setProduct(null)
+        }
     }
 
     useEffect(() => {
-        if (products.length > 0) {
-            fetchProduct()
-        }
+        fetchProduct()
         scrollTo(0, 0)
     }, [productId,products]);
 

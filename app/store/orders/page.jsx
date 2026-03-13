@@ -1,7 +1,8 @@
 'use client'
 import { useEffect, useState } from "react"
 import Loading from "@/components/Loading"
-import { orderDummyData } from "@/assets/assets"
+import { apiRequest } from "@/lib/api"
+import toast from "react-hot-toast"
 
 export default function StoreOrders() {
     const [orders, setOrders] = useState([])
@@ -10,12 +11,22 @@ export default function StoreOrders() {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const fetchOrders = async () => {
-        setOrders(orderDummyData)
-        setLoading(false)
+        try {
+            const data = await apiRequest('/vendor/orders')
+            setOrders(data.data || [])
+        } catch (error) {
+            toast.error(error.message || "Impossible de charger les commandes.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     const updateOrderStatus = async (orderId, status) => {
-        // TODO: brancher au backend quand l'endpoint sera disponible
+        await apiRequest(`/vendor/orders/${orderId}/status`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status }),
+        })
+        await fetchOrders()
     }
 
     const openModal = (order) => {

@@ -31,6 +31,9 @@ const OrderItem = ({ order }) => {
                                 </div>
                                 <div className="flex flex-col justify-center text-sm">
                                     <p className="font-medium text-slate-600 text-base">{item.product.name}</p>
+                                    {order.store?.name && (
+                                        <p className="text-xs text-slate-500">Boutique: {order.store.name}</p>
+                                    )}
                                     <p>{currency}{item.price} Qty : {item.quantity} </p>
                                     <p className="mb-1">{new Date(order.createdAt).toDateString()}</p>
                                     <div>
@@ -73,6 +76,7 @@ const OrderItem = ({ order }) => {
                     <p>{order.address.name}, {order.address.street}</p>
                     <p>{order.address.city}, {order.address.state}, {order.address.zip}, {order.address.country}</p>
                     <p>{order.address.phone}</p>
+                    {order.store?.name && <p>Boutique: {order.store.name}</p>}
                     <br />
                     <div className="flex items-center">
                         <span className='text-center mx-auto px-6 py-1.5 rounded bg-green-100 text-green-700' >

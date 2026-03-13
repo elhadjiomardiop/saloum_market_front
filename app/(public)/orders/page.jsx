@@ -2,14 +2,22 @@
 import PageTitle from "@/components/PageTitle"
 import { useEffect, useState } from "react";
 import OrderItem from "@/components/OrderItem";
-import { orderDummyData } from "@/assets/assets";
+import { apiRequest } from "@/lib/api";
 
 export default function Orders() {
 
     const [orders, setOrders] = useState([]);
 
     useEffect(() => {
-        setOrders(orderDummyData)
+        const loadOrders = async () => {
+            try {
+                const data = await apiRequest('/orders')
+                setOrders(data.data || [])
+            } catch {
+                setOrders([])
+            }
+        }
+        loadOrders()
     }, []);
 
     return (
