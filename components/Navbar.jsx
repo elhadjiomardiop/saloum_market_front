@@ -1,5 +1,5 @@
 'use client'
-import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { HomeIcon, LayoutListIcon, Menu, Phone, Search, ShoppingCart, StoreIcon, UserIcon, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -17,6 +17,7 @@ const Navbar = () => {
     const [user, setUser] = useState(null)
     const [showProfile, setShowProfile] = useState(false)
     const [showMobileMenu, setShowMobileMenu] = useState(false)
+    const [showMobileSearch, setShowMobileSearch] = useState(false)
     const [savingProfile, setSavingProfile] = useState(false)
     const [profileForm, setProfileForm] = useState({ name: '', email: '' })
     const cartCount = useSelector(state => state.cart.total)
@@ -47,6 +48,11 @@ const Navbar = () => {
 
     const handleSearch = (e) => {
         e.preventDefault()
+        if (!search.trim()) {
+            return
+        }
+        setShowMobileMenu(false)
+        setShowMobileSearch(false)
         router.push(`/shop?search=${encodeURIComponent(search)}`)
     }
 
@@ -122,11 +128,15 @@ const Navbar = () => {
                         </Link>
 
                         {!user ? (
-                            <div className="flex items-center gap-2">
-                                <Link href="/login" className="px-6 py-2 bg-orange-500 hover:bg-orange-700 transition text-white rounded-full">
-                                    Connexion
+                            <div className="flex items-center gap-3">
+                                <Link
+                                    href="/login"
+                                    aria-label="Connexion"
+                                    className="size-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-100 transition"
+                                >
+                                    <UserIcon size={18} />
                                 </Link>
-                                <Link href="/register" className="px-6 py-2 bg-slate-700 hover:bg-slate-900 transition text-white rounded-full">
+                                <Link href="/register" className="text-sm text-slate-600 hover:text-orange-500">
                                     Inscription
                                 </Link>
                             </div>
@@ -186,6 +196,13 @@ const Navbar = () => {
                         >
                             {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
                         </button>
+                        <button
+                            onClick={() => setShowMobileSearch((prev) => !prev)}
+                            className="p-1.5 rounded-md border border-slate-200 text-slate-700"
+                            aria-label="Rechercher"
+                        >
+                            <Search size={20} />
+                        </button>
                         <Link href="/cart" className="relative flex items-center text-slate-700">
                             <ShoppingCart size={20} />
                             <span className="absolute -top-2 -right-2 text-[9px] text-white bg-slate-600 size-4 rounded-full flex items-center justify-center">
@@ -193,8 +210,12 @@ const Navbar = () => {
                             </span>
                         </Link>
                         {!user ? (
-                            <Link href="/login" className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-sm transition text-white rounded-full">
-                                Connexion
+                            <Link
+                                href="/login"
+                                aria-label="Connexion"
+                                className="size-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-100 transition"
+                            >
+                                <UserIcon size={16} />
                             </Link>
                         ) : (
                             <div ref={mobileProfileRef} className="relative">
@@ -245,6 +266,23 @@ const Navbar = () => {
                 </div>
             </div>
             <hr className="border-gray-300" />
+            {showMobileSearch && (
+                <form onSubmit={handleSearch} className="md:hidden px-4 pb-3 bg-white">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-full text-sm">
+                            <Search size={16} className="text-slate-600" />
+                            <input
+                                className="w-full bg-transparent outline-none placeholder-slate-600"
+                                type="text"
+                                placeholder="Rechercher des produits"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                required
+                            />
+                        </div>
+                    </div>
+                </form>
+            )}
             {showMobileMenu && (
                 <div className="md:hidden px-4 pb-4 border-b border-gray-200 bg-white">
                     <div className="max-w-7xl mx-auto flex flex-col gap-2 text-slate-700">
@@ -252,9 +290,34 @@ const Navbar = () => {
                         <Link onClick={() => setShowMobileMenu(false)} href="/shop" className="py-2 px-2 rounded hover:bg-slate-100">Boutique</Link>
                         <Link onClick={() => setShowMobileMenu(false)} href="/#apropos" className="py-2 px-2 rounded hover:bg-slate-100">A propos</Link>
                         <Link onClick={() => setShowMobileMenu(false)} href="/#contact" className="py-2 px-2 rounded hover:bg-slate-100">Contact</Link>
+                        {!user && (
+                            <Link onClick={() => setShowMobileMenu(false)} href="/register" className="py-2 px-2 rounded hover:bg-slate-100">
+                                Inscription
+                            </Link>
+                        )}
                     </div>
                 </div>
             )}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur">
+                <div className="mx-auto grid grid-cols-5 text-[10px] text-slate-600">
+                    {[
+                        { href: '/', label: 'Accueil', Icon: HomeIcon },
+                        { href: '/shop', label: 'Boutique', Icon: StoreIcon },
+                        { href: '/#apropos', label: 'A propos', Icon: UserIcon },
+                        { href: '/#contact', label: 'Contact', Icon: Phone },
+                        { href: '/orders', label: 'Mes commandes', Icon: LayoutListIcon },
+                    ].map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            className="flex flex-col items-center justify-center gap-1 py-2 hover:text-orange-500"
+                        >
+                            <item.Icon size={18} />
+                            <span className="leading-none">{item.label}</span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
         </nav>
     )
 }
