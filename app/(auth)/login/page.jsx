@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import LoginClient from './LoginClient';
 
 export default function LoginPage({ searchParams }) {
@@ -6,5 +7,9 @@ export default function LoginPage({ searchParams }) {
         : searchParams?.next;
     const nextPath = typeof nextParam === 'string' ? nextParam : '';
 
-    return <LoginClient nextPath={nextPath} />;
+    return (
+        <Suspense fallback={<div className="h-40 w-full animate-pulse rounded-2xl bg-slate-100" />}>
+            <LoginClient nextPath={nextPath} />
+        </Suspense>
+    );
 }
