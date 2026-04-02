@@ -1,5 +1,5 @@
 'use client'
-import { HomeIcon, LayoutListIcon, Phone, Search, ShoppingCart, StoreIcon, UserIcon } from "lucide-react";
+import { Home as HomeIcon, LayoutList as LayoutListIcon, Phone as PhoneIcon, Search, ShoppingCart, Store as StoreIcon, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +21,7 @@ const Navbar = () => {
     const [savingProfile, setSavingProfile] = useState(false)
     const [profileForm, setProfileForm] = useState({ name: '', email: '' })
     const [currentHash, setCurrentHash] = useState('')
-    const cartCount = useSelector(state => state.cart.total)
+    const cartCount = useSelector(state => state.cart?.total ?? 0)
 
     useEffect(() => {
         const sessionUser = getSessionUser()
@@ -309,18 +309,22 @@ const Navbar = () => {
             </nav>
             <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur">
                 <div className="mx-auto grid grid-cols-5 text-[10px] text-slate-600">
-                        {[
-                            { href: '/', label: 'Accueil', Icon: HomeIcon },
-                            { href: '/shop', label: 'Boutique', Icon: StoreIcon },
-                            { href: '/#apropos', label: 'A propos', Icon: UserIcon },
-                            { href: '/#contact', label: 'Contact', Icon: Phone },
-                            { href: '/orders', label: 'Mes commandes', Icon: LayoutListIcon },
-                        ].map((item) => (
-                            <Link
-                                key={item.label}
-                                href={item.href}
-                                className={`relative flex flex-col items-center justify-center gap-1 py-2 transition ${isActiveLink(item.href) ? 'text-orange-600 font-semibold after:absolute after:-bottom-0.5 after:h-0.5 after:w-8 after:bg-orange-500 after:rounded-full after:transition-all after:duration-300 after:scale-x-100' : 'text-slate-600 hover:text-orange-500 after:absolute after:-bottom-0.5 after:h-0.5 after:w-8 after:bg-orange-500 after:rounded-full after:transition-all after:duration-300 after:scale-x-0 hover:after:scale-x-100'}}`
-                            >
+                    {[
+                        { href: '/', label: 'Accueil', Icon: HomeIcon },
+                        { href: '/shop', label: 'Boutique', Icon: StoreIcon },
+                        { href: '/#apropos', label: 'A propos', Icon: UserIcon },
+                        { href: '/#contact', label: 'Contact', Icon: PhoneIcon },
+                        { href: '/orders', label: 'Mes commandes', Icon: LayoutListIcon },
+                    ].map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            className={`relative flex flex-col items-center justify-center gap-1 py-2 transition ${
+                                isActiveLink(item.href)
+                                    ? 'text-orange-600 font-semibold after:absolute after:-bottom-0.5 after:h-0.5 after:w-8 after:bg-orange-500 after:rounded-full after:transition-all after:duration-300 after:scale-x-100'
+                                    : 'text-slate-600 hover:text-orange-500 after:absolute after:-bottom-0.5 after:h-0.5 after:w-8 after:bg-orange-500 after:rounded-full after:transition-all after:duration-300 after:scale-x-0 hover:after:scale-x-100'
+                            }`}
+                        >
                             <item.Icon size={18} />
                             <span className="leading-none">{item.label}</span>
                         </Link>
@@ -330,5 +334,6 @@ const Navbar = () => {
         </>
     )
 }
+
 
 export default Navbar
