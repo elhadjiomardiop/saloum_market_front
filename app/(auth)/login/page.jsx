@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import LoginClient from './LoginClient';
 
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage({ searchParams }) {
     const nextParam = Array.isArray(searchParams?.next)
         ? searchParams.next[0]
