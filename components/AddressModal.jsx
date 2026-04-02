@@ -2,6 +2,8 @@
 import { XIcon } from "lucide-react"
 import { useState } from "react"
 import { toast } from "react-hot-toast"
+import { useDispatch } from "react-redux"
+import { addAddress } from "@/lib/features/address/addressSlice"
 
 const AddressModal = ({ setShowAddressModal }) => {
 
@@ -15,6 +17,7 @@ const AddressModal = ({ setShowAddressModal }) => {
         country: '',
         phone: ''
     })
+    const dispatch = useDispatch()
 
     const handleAddressChange = (e) => {
         setAddress({
@@ -26,6 +29,7 @@ const AddressModal = ({ setShowAddressModal }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        dispatch(addAddress(address))
         setShowAddressModal(false)
     }
 

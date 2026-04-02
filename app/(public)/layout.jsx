@@ -9,8 +9,10 @@ export default function PublicLayout({ children }) {
         <>
             <Banner />
             <Navbar />
-            {children} 
-            <Footer />
+            <div className="pb-20 md:pb-0">
+                {children}
+                <Footer />
+            </div>
         </>
     );
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { MailIcon, MapPinIcon } from "lucide-react"
 import Loading from "@/components/Loading"
 import Image from "next/image"
-import { dummyStoreData, productDummyData } from "@/assets/assets"
+import { apiRequest } from "@/lib/api"
 
 export default function StoreShop() {
 
@@ -15,9 +15,16 @@ export default function StoreShop() {
     const [loading, setLoading] = useState(true)
 
     const fetchStoreData = async () => {
-        setStoreInfo(dummyStoreData)
-        setProducts(productDummyData)
-        setLoading(false)
+        try {
+            const [storeRes, productsRes] = await Promise.all([
+                apiRequest(`/stores/${username}`),
+                apiRequest(`/stores/${username}/products`),
+            ])
+            setStoreInfo(storeRes?.data || null)
+            setProducts(productsRes?.data || [])
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -31,7 +38,7 @@ export default function StoreShop() {
             {storeInfo && (
                 <div className="max-w-7xl mx-auto bg-slate-50 rounded-xl p-6 md:p-10 mt-6 flex flex-col md:flex-row items-center gap-6 shadow-xs">
                     <Image
-                        src={storeInfo.logo}
+                        src={storeInfo.logo || "/favicon.ico"}
                         alt={storeInfo.name}
                         className="size-32 sm:size-38 object-cover border-2 border-slate-100 rounded-md"
                         width={200}
@@ -62,6 +69,9 @@ export default function StoreShop() {
                 <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto">
                     {products.map((product) => <ProductCard key={product.id} product={product} />)}
                 </div>
+                {!products.length && (
+                    <p className="mt-6 text-slate-500">Aucun produit disponible pour cette boutique.</p>
+                )}
             </div>
         </div>
     ) : <Loading />

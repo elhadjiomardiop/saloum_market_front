@@ -48,13 +48,15 @@ const ProductDescription = ({ product }) => {
             )}
 
             {/* Store Page */}
-            <div className="flex gap-3 mt-14">
-                <Image src={product.store.logo} alt="" className="size-11 rounded-full ring ring-slate-400" width={100} height={100} />
-                <div>
-                    <p className="font-medium text-slate-600">Produit de {product.store.name}</p>
-                    <Link href={`/shop/${product.store.username}`} className="flex items-center gap-1.5 text-orange-500">Voir la boutique <ArrowRight size={14} /></Link>
+            {product.store && (
+                <div className="flex gap-3 mt-14">
+                    <Image src={product.store.logo || "/favicon.ico"} alt="" className="size-11 rounded-full ring ring-slate-400" width={100} height={100} />
+                    <div>
+                        <p className="font-medium text-slate-600">Produit de {product.store.name}</p>
+                        <Link href={`/shop/${product.store.username}`} className="flex items-center gap-1.5 text-orange-500">Voir la boutique <ArrowRight size={14} /></Link>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     )
 }

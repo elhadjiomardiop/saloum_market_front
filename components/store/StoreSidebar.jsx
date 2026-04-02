@@ -15,6 +15,13 @@ const StoreSidebar = ({storeInfo}) => {
         { name: 'Commandes', href: '/store/orders', icon: LayoutListIcon },
     ]
 
+    const isActiveLink = (href) => {
+        if (href === '/store') {
+            return pathname === '/store'
+        }
+        return pathname === href || pathname.startsWith(`${href}/`)
+    }
+
     return (
         <div className="inline-flex h-full flex-col gap-5 border-r border-orange-200 sm:min-w-60">
             <div className="flex flex-col gap-3 justify-center items-center pt-8 max-sm:hidden">
@@ -25,10 +32,10 @@ const StoreSidebar = ({storeInfo}) => {
             <div className="max-sm:mt-6">
                 {
                     sidebarLinks.map((link, index) => (
-                        <Link key={index} href={link.href} className={`relative flex items-center gap-3 text-slate-500 hover:bg-orange-50 p-2.5 transition ${pathname === link.href && 'bg-slate-100 sm:text-slate-600'}`}>
+                        <Link key={index} href={link.href} className={`relative flex items-center gap-3 text-slate-500 hover:bg-orange-50 p-2.5 transition ${isActiveLink(link.href) && 'bg-slate-100 sm:text-slate-700'}`}>
                             <link.icon size={18} className="sm:ml-5" />
                             <p className="max-sm:hidden">{link.name}</p>
-                            {pathname === link.href && <span className="absolute bg-orange-500 right-0 top-1.5 bottom-1.5 w-1 sm:w-1.5 rounded-l"></span>}
+                            <span className={`absolute left-5 right-5 -bottom-0.5 h-0.5 bg-orange-500 rounded-full transition-all duration-300 ${isActiveLink(link.href) ? 'scale-x-100' : 'scale-x-0'}`}></span>
                         </Link>
                     ))
                 }

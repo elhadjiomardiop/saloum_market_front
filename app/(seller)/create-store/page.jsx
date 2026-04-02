@@ -58,13 +58,11 @@ export default function CreateStore() {
                 setAlreadySubmitted(true)
                 setStatus(store.status || "pending")
 
-                if (store.status === 'pending') {
-                    setMessage("Votre demande est en cours")
-                } else if (store.status === 'approved') {
-                    setMessage("Votre boutique est approuvee. Redirection vers le dashboard vendeur...")
-                    setTimeout(() => router.push('/store'), 3000)
+                if (store.status === 'approved') {
+                    setMessage("Votre boutique est active. Redirection vers le dashboard vendeur...")
+                    setTimeout(() => router.push('/store'), 1500)
                 } else {
-                    setMessage("Votre demande a ete refusee. Vous pouvez contacter l'administrateur.")
+                    setMessage("Votre boutique est en cours de traitement.")
                 }
             }
         } catch (error) {
@@ -107,11 +105,11 @@ export default function CreateStore() {
         } catch {
             // Keep creation success path based on POST response.
         }
-        const storeStatus = verifiedStore?.status || response?.data?.status || 'pending'
+        const storeStatus = verifiedStore?.status || response?.data?.status || 'approved'
 
         setAlreadySubmitted(true)
         setStatus(storeStatus)
-        setMessage(storeStatus === 'pending' ? "Votre demande est en cours" : (response?.message || "Votre demande de creation a ete envoyee."))
+        setMessage(storeStatus === 'approved' ? "Votre boutique est active. Redirection vers le dashboard..." : (response?.message || "Votre boutique a ete enregistree."))
     }
 
     useEffect(() => {
@@ -124,15 +122,15 @@ export default function CreateStore() {
                 <div className="mx-6 min-h-[70vh] my-16">
                     <form
                         onSubmit={e => toast.promise(onSubmitHandler(e), {
-                            loading: "Envoi de la demande...",
-                            success: "Votre demande a ete envoyee a l'administrateur.",
-                            error: (err) => err?.message || "Echec de l'envoi.",
+                            loading: "Creation de la boutique...",
+                            success: "Boutique creee avec succes.",
+                            error: (err) => err?.message || "Echec de la creation.",
                         })}
                         className="max-w-7xl mx-auto flex flex-col items-start gap-3 text-slate-500"
                     >
                         <div>
                             <h1 className="text-3xl ">Creer votre <span className="text-orange-500 font-medium">Boutique</span></h1>
-                            <p className="max-w-lg">Pour devenir vendeur sur GoCart, envoyez les informations de votre boutique pour verification. Votre boutique sera activee apres validation de l'administrateur.</p>
+                            <p className="max-w-lg">Remplissez les informations de votre boutique. Elle sera activee automatiquement apres creation.</p>
                         </div>
 
                         <label className="mt-10 cursor-pointer">
