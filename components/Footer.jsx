@@ -32,8 +32,8 @@ const Footer = () => {
             title: "Navigation",
             links: [
                 { text: "Accueil", path: "/" },
-                { text: "A propos", path: "/#apropos" },
-                { text: "Contact", path: "/#contact" },
+                { text: "A propos", path: "/about" },
+                { text: "Contact", path: "/contact" },
                 { text: "Connexion", path: "/login" },
             ],
         },

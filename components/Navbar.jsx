@@ -126,8 +126,8 @@ const Navbar = () => {
     const bottomLinks = [
         { href: '/', label: 'Accueil', Icon: HomeIcon },
         { href: '/shop', label: 'Boutique', Icon: StoreIcon },
-        { href: '/#apropos', label: 'A propos', Icon: UserIcon },
-        { href: '/#contact', label: 'Contact', Icon: PhoneIcon },
+        { href: '/about', label: 'A propos', Icon: UserIcon },
+        { href: '/contact', label: 'Contact', Icon: PhoneIcon },
         { href: '/orders', label: 'Mes commandes', Icon: LayoutListIcon },
     ];
 
@@ -141,10 +141,10 @@ const Navbar = () => {
                         </Link>
 
                         <div className="hidden md:flex items-center gap-4 lg:gap-8 text-slate-600">
-                            <Link href="/#accueil" className={linkClass('/#accueil')}>Accueil</Link>
+                            <Link href="/" className={linkClass('/')}>Accueil</Link>
                             <Link href="/shop" className={linkClass('/shop')}>Boutique</Link>
-                            <Link href="/#apropos" className={linkClass('/#apropos')}>A propos</Link>
-                            <Link href="/#contact" className={linkClass('/#contact')}>Contact</Link>
+                            <Link href="/about" className={linkClass('/about')}>A propos</Link>
+                            <Link href="/contact" className={linkClass('/contact')}>Contact</Link>
 
                             <form onSubmit={handleSearch} className="hidden xl:flex items-center w-xs text-sm gap-2 bg-slate-100 px-4 py-3 rounded-full">
                                 <Search size={18} className="text-slate-600" />

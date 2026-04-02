@@ -8,13 +8,22 @@ const ProductCard = ({ product }) => {
 
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || 'FCFA'
 
-    // calculate the average rating of the product
-    const rating = Math.round(product.rating.reduce((acc, curr) => acc + curr.rating, 0) / product.rating.length);
+    const productId = product?.id ?? product?._id ?? product?.product_id ?? '';
+    const ratingValues = Array.isArray(product?.rating) ? product.rating : [];
+    const rating = ratingValues.length
+        ? Math.round(ratingValues.reduce((acc, curr) => acc + curr.rating, 0) / ratingValues.length)
+        : 0;
+    const href = productId ? `/product/${productId}` : '/shop';
+    const imageSrc = product?.images?.[0] || product?.image || product?.thumbnail || null;
 
     return (
-        <Link href={`/product/${product.id}`} className=' group max-xl:mx-auto'>
+        <Link href={href} className=' group max-xl:mx-auto'>
             <div className='bg-[#F5F5F5] h-40  sm:w-60 sm:h-68 rounded-lg flex items-center justify-center'>
-                <Image width={500} height={500} className='max-h-30 sm:max-h-40 w-auto group-hover:scale-115 transition duration-300' src={product.images[0]} alt="" />
+                {imageSrc ? (
+                    <Image width={500} height={500} className='max-h-30 sm:max-h-40 w-auto group-hover:scale-115 transition duration-300' src={imageSrc} alt={product.name || 'Produit'} />
+                ) : (
+                    <div className="text-xs text-slate-400">Image indisponible</div>
+                )}
             </div>
             <div className='flex justify-between gap-3 text-sm text-slate-800 pt-2 max-w-60'>
                 <div>
