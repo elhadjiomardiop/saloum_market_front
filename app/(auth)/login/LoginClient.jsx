@@ -3,16 +3,30 @@ import { apiRequest } from '@/lib/api';
 import { setSession } from '@/lib/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function LoginClient({ nextPath = '' }) {
+export default function LoginClient() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [nextPath, setNextPath] = useState('');
     const [form, setForm] = useState({
         email: '',
         password: '',
     });
+
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        const updateNextPath = () => {
+            const params = new URLSearchParams(window.location.search);
+            setNextPath(params.get('next') || '');
+        };
+        updateNextPath();
+        window.addEventListener('popstate', updateNextPath);
+        return () => window.removeEventListener('popstate', updateNextPath);
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

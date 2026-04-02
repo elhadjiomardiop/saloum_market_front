@@ -1,15 +1,29 @@
 'use client';
 import ProductCard from "@/components/ProductCard";
 import { MoveLeftIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function ShopClient() {
-    const searchParams = useSearchParams();
-    const search = searchParams.get('search');
+    const pathname = usePathname();
     const router = useRouter();
+    const [search, setSearch] = useState('');
 
     const products = useSelector((state) => state.product.list);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        const updateSearch = () => {
+            const params = new URLSearchParams(window.location.search);
+            setSearch(params.get('search') || '');
+        };
+        updateSearch();
+        window.addEventListener('popstate', updateSearch);
+        return () => window.removeEventListener('popstate', updateSearch);
+    }, [pathname]);
 
     const filteredProducts = search
         ? products.filter((product) =>
