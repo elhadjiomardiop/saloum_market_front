@@ -235,7 +235,7 @@ const Navbar = () => {
                                             onClick={handleLogout}
                                             className="w-full mt-2 bg-slate-900 text-white rounded-lg py-2"
                                         >
-                                            Deconnexion
+                                            Déconnexion
                                         </button>
                                     </div>
                                 )}
