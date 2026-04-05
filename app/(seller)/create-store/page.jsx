@@ -131,7 +131,7 @@ export default function CreateStore() {
                         className="max-w-7xl mx-auto flex flex-col items-start gap-3 text-slate-500"
                     >
                         <div>
-                            <h1 className="text-3xl ">Creer votre <span className="text-orange-500 font-medium">Boutique</span></h1>
+                            <h1 className="text-3xl ">Créer votre <span className="text-orange-500 font-medium">Boutique</span></h1>
                             <p className="max-w-lg">Pour devenir vendeur sur GoCart, envoyez les informations de votre boutique pour verification. Votre boutique sera activee apres validation de l'administrateur.</p>
                         </div>
 
